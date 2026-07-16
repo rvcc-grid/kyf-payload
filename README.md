@@ -63,14 +63,6 @@ photos are at flight weight.
 ONLY when the manifest says "Cleared for launch":
 commit and push. The pushed repo is your submission.
 
-After you push, look at your repo on GitHub: a launch
-director (a robot called GitHub Actions) inspects your
-cargo automatically. Green check = passed. Red X =
-click it and read which step failed. It also checks
-something the page cannot: whether an original ever
-got committed. Git remembers every version of every
-file you commit — forever.
-
 ## Rules
 
 - Do NOT commit or push the original downloads. The
