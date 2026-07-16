@@ -1,0 +1,14 @@
+# If you can read this, you have found an invisible file.
+#
+# Files whose names start with a dot are hidden files. Finder and
+# File Explorer do not show them by default, but they are there —
+# real files doing real work.
+#
+# This one is called .gitignore. Nearly every project you will ever
+# open has one. Its job: tell git which files to NEVER track.
+
+# macOS Finder leaves these behind
+.DS_Store
+
+# Windows Explorer leaves these behind
+Thumbs.db
