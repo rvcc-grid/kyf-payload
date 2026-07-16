@@ -1,0 +1,75 @@
+# Launch director's inspection — runs every time you push.
+# Green check = your cargo passed. Red X = read the log below the failed step.
+name: Payload check
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    # Skip on the template repo itself (it ships with an empty cargo hold)
+    if: github.repository != 'rvcc-grid/kyf-payload'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch the repo (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Both photos are aboard
+        run: |
+          missing=0
+          for f in images/rocket-launch.jpg images/mars-selfie.jpg; do
+            if [ ! -f "$f" ]; then
+              echo "::error::$f is missing from the cargo hold"
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - name: Each photo is at most 350 KB
+        run: |
+          over=0
+          for f in images/rocket-launch.jpg images/mars-selfie.jpg; do
+            bytes=$(stat -c%s "$f")
+            kb=$((bytes / 1024))
+            if [ "$bytes" -gt 358400 ]; then
+              echo "::error::$f is ${kb} KB — over the 350 KB budget. Trim it with Squoosh."
+              over=1
+            else
+              echo "$f: ${kb} KB — flight weight"
+            fi
+          done
+          exit $over
+
+      - name: Each photo is at most 1200 px wide
+        run: |
+          wide=0
+          for f in images/rocket-launch.jpg images/mars-selfie.jpg; do
+            w=$(identify -format '%w' "$f")
+            if [ "$w" -gt 1200 ]; then
+              echo "::error::$f is ${w} px wide — over the 1200 px budget"
+              wide=1
+            else
+              echo "$f: ${w} px wide"
+            fi
+          done
+          exit $wide
+
+      - name: No original ever entered git history
+        run: |
+          # Every blob git has EVER recorded, largest first. If an 8 MB
+          # original was committed at any point — even if replaced later —
+          # it is still in here. The repo remembers everything.
+          big=$(git rev-list --objects --all \
+            | git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)' \
+            | awk '$1 == "blob" && $2 > 1048576 {print $2, $3}')
+          if [ -n "$big" ]; then
+            echo "::error::Oversized cargo found in git history (bytes, path):"
+            echo "$big"
+            echo "::error::An original was committed at some point. Git keeps every version — ask your instructor about cleaning history."
+            exit 1
+          fi
+          echo "History is clean — no blob over 1 MB was ever committed."
