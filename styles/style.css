@@ -1,0 +1,195 @@
+/* Payload check — dark space theme (kyf series) */
+
+:root {
+  --space-black: hsl(230, 35%, 7%);
+  --panel: hsl(230, 30%, 12%);
+  --panel-edge: hsl(230, 25%, 22%);
+  --ink: hsl(220, 30%, 92%);
+  --ink-soft: hsl(220, 20%, 78%);
+  --accent: hsl(35, 95%, 62%);
+  --success: hsl(145, 70%, 55%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--space-black);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.6;
+}
+
+h1,
+h2 {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0.04em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+figure {
+  margin: 0;
+}
+
+figcaption {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  padding-top: 0.5rem;
+}
+
+code {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background-color: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  color: var(--accent);
+}
+
+/* Hero */
+
+.hero {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+.hero figure img {
+  border-radius: 0;
+}
+
+.hero figcaption {
+  padding: 0.5rem 1rem 0;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  margin: 1.5rem 0 0.25rem;
+}
+
+.tagline {
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 0;
+}
+
+/* Sections */
+
+main {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+section {
+  margin: 3.5rem 0;
+}
+
+section h2 {
+  color: var(--accent);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Mission manifest panel */
+
+.manifest {
+  background-color: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+}
+
+.manifest h2 {
+  margin-top: 0;
+}
+
+/* Side-by-side sections (moon, mars) */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.split-reverse figure {
+  order: 2;
+}
+
+.split-text h2 {
+  margin-top: 0;
+}
+
+@media (max-width: 40rem) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .split-reverse figure {
+    order: 0;
+  }
+}
+
+/* Footer */
+
+footer {
+  text-align: center;
+  padding: 3rem 1.25rem 2rem;
+}
+
+.success-banner {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--success);
+  border: 2px solid var(--success);
+  border-radius: 12px;
+  max-width: 40rem;
+  margin: 0 auto 2rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.credits {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+/* Cargo manifest states */
+
+.cargo li {
+  margin-bottom: 0.6rem;
+}
+
+.cargo li.missing .verdict {
+  color: hsl(210, 60%, 70%);
+}
+
+.cargo li.too-heavy .verdict {
+  color: hsl(10, 85%, 68%);
+  font-weight: bold;
+}
+
+.cargo li.cleared .verdict {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.cargo .success-banner {
+  margin-top: 1.5rem;
+}
+
+.hero {
+  padding-top: 3rem;
+}

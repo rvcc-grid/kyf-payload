@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Payload check — Cleared for launch?</title>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>Payload check</h1>
+      <p class="tagline">Every kilobyte costs fuel</p>
+    </header>
+
+    <main>
+      <section class="manifest" aria-labelledby="briefing-heading">
+        <h2 id="briefing-heading">Flight briefing — read this first</h2>
+        <p>
+          This page is ready to fly, except for one problem: its two photos.
+          The archive only hands out the <em>originals</em> — museum-grade
+          files far too heavy for a web page. Your mission has three phases:
+        </p>
+        <ol>
+          <li>
+            <strong>Fetch the cargo.</strong> Download both originals from
+            the sources listed in <code>README.md</code> and save them into
+            the <code>images/</code> folder under the exact names below.
+          </li>
+          <li>
+            <strong>Weigh it.</strong> With the page open, use the browser's
+            DevTools Network tab. Reload and read two numbers at the bottom:
+            how many <em>megabytes transferred</em> and the
+            <em>finish time</em>. Write them down.
+          </li>
+          <li>
+            <strong>Trim it.</strong> Use Squoosh to resize each photo to at
+            most <strong>1200 pixels wide</strong> and export it. Replace
+            the file under the same name. Then weigh again.
+          </li>
+        </ol>
+        <p>This page expects exactly two photos:</p>
+        <ul>
+          <li><code>images/rocket-launch.jpg</code> — the Artemis I launch</li>
+          <li><code>images/mars-selfie.jpg</code> — Curiosity's self-portrait</li>
+        </ul>
+        <p>
+          The cargo manifest below weighs your photos every time you refresh.
+          Nothing flies until both rows are green.
+        </p>
+      </section>
+
+      <section class="manifest cargo" aria-labelledby="cargo-heading">
+        <h2 id="cargo-heading">Cargo manifest</h2>
+        <ul id="cargo-list">
+          <li data-src="images/rocket-launch.jpg">
+            <code>images/rocket-launch.jpg</code> — <span class="verdict">checking…</span>
+          </li>
+          <li data-src="images/mars-selfie.jpg">
+            <code>images/mars-selfie.jpg</code> — <span class="verdict">checking…</span>
+          </li>
+        </ul>
+        <p class="success-banner" id="launch-banner" hidden>
+          Cleared for launch! Both photos are flight weight. 🚀
+        </p>
+      </section>
+
+      <section aria-labelledby="launch-heading">
+        <h2 id="launch-heading">The launch</h2>
+        <figure>
+          <img
+            src="images/rocket-launch.jpg"
+            alt="A rocket lifting off at night, engines blazing, lighting up the launch pad"
+          />
+          <figcaption>
+            Artemis I leaving Earth — expects
+            <code>images/rocket-launch.jpg</code>
+          </figcaption>
+        </figure>
+        <p>
+          You may recognize this photo — it flew on your first mission. Back
+          then someone had already trimmed it to flight weight for you. This
+          time, the archive gives you the original, exactly as the camera
+          saved it.
+        </p>
+      </section>
+
+      <section aria-labelledby="cargo2-heading">
+        <h2 id="cargo2-heading">The payload specialist</h2>
+        <figure>
+          <img
+            src="images/mars-selfie.jpg"
+            alt="The Curiosity rover's self-portrait on Mars, dusty solar deck and rocky terrain around it"
+          />
+          <figcaption>
+            Curiosity's self-portrait at Glen Etive, Mars — expects
+            <code>images/mars-selfie.jpg</code>
+          </figcaption>
+        </figure>
+        <p>
+          One hundred and six megapixels of Mars. Magnificent in an archive,
+          absurd on a web page — this single photo is heavier than most
+          entire websites. Weigh it, feel it, then trim it.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p class="credits">
+        All photos courtesy of NASA (public domain), via images.nasa.gov.
+      </p>
+    </footer>
+
+    <script>
+      // Cargo manifest: weigh each photo by its true pixel width.
+      // (File size can't be read from a local page — that's what the
+      // DevTools Network tab is for. Width is the tell: an original is
+      // thousands of pixels wide; flight weight is at most MAX_WIDTH.)
+      const MAX_WIDTH = 1200;
+      const rows = document.querySelectorAll("#cargo-list li");
+      let clearedCount = 0;
+
+      rows.forEach((row) => {
+        const probe = new Image();
+        const verdict = row.querySelector(".verdict");
+        probe.onload = () => {
+          const w = probe.naturalWidth;
+          if (w > MAX_WIDTH) {
+            const times = (w / MAX_WIDTH).toFixed(1);
+            row.className = "too-heavy";
+            verdict.textContent =
+              w + " px wide — " + times + "× over the " + MAX_WIDTH + " px budget ❌";
+          } else {
+            row.className = "cleared";
+            verdict.textContent = w + " px wide — flight weight ✅";
+            clearedCount += 1;
+            if (clearedCount === rows.length) {
+              document.getElementById("launch-banner").hidden = false;
+            }
+          }
+        };
+        probe.onerror = () => {
+          row.className = "missing";
+          verdict.textContent = "missing — not in the images folder yet ⬇";
+        };
+        probe.src = row.dataset.src;
+      });
+    </script>
+  </body>
+</html>
